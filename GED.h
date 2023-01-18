@@ -48,6 +48,9 @@ private :
     void set_edge_increase(int id1, int id2);
     int get_vertex_unmapped_part_cost();
     int get_edge_unmapped_part_cost();
+    mapping copy_mapping(int i, int cost);
+    int * temp_g1_edge_set;
+    int * temp_g2_edge_set;
     void test();
 
 public :
@@ -62,74 +65,26 @@ public :
         GED_mapping = new int[max_size];
         min_cost = -1;
         set_graph_set();
+        temp_g1_edge_set = new int[edge_mapping_size];
+        temp_g2_edge_set = new int[edge_mapping_size];
+        // for(int i = 0 ; i < vertex_mapping_size ; i++){
+        //     cout << g1_vertex_set[i] << " ";
+        // }
+        // cout << endl;
+        // for(int i = 0 ; i < vertex_mapping_size ; i++){
+        //     cout << g2_vertex_set[i] << " ";
+        // }
+        // cout << endl;
+        // for(int i = 0 ; i < edge_mapping_size ; i++){
+        //     cout << g1_edge_set[i] << " ";
+        // }
+        // cout << endl;
+        // for(int i = 0 ; i < edge_mapping_size ; i++){
+        //     cout << g2_edge_set[i] << " ";
+        // }
     }
     int get_GED();
 };
-
-// void GED :: set_graph_set(){
-//     set<int> vertex_set_temp;
-//     set<int> edge_set_temp;
-//     set<int> vertex_mapping_set_temp;
-//     set<int> edge_mapping_set_temp;
-//     for(int i = 0 ; i < g1.vertex_set_size ; i++){
-//         // vertex_set_temp.insert(g1.vertex_set[i]);
-//         // cout << g1.vertex_set[i] << endl; 
-//         vertex_mapping_set_temp.insert(g1.vertex_set_mapping[i]);
-//     }
-//     for(int i = 0 ; i < g2.vertex_set_size ; i++){
-//         // vertex_set_temp.insert(g2.vertex_set[i]);
-//         // cout << g2.vertex_set[i] << endl; 
-//         vertex_mapping_set_temp.insert(g2.vertex_set_mapping[i]);
-//     }
-//     for(int i = 0 ; i < g1.edge_set_size ; i++){
-//         // edge_set_temp.insert(g1.edge_set[i]);
-//         edge_mapping_set_temp.insert(g1.edge_set_mapping[i]);
-//     }
-//     for(int i = 0 ; i < g2.edge_set_size ; i++){
-//         // edge_set_temp.insert(g2.edge_set[i]);
-//         edge_mapping_set_temp.insert(g2.edge_set_mapping[i]);
-//     }
-//     // vector<int> vertex_vector_temp;
-//     // vector<int> edge_vector_temp;
-//     vector<int> vertex_mapping_vector_temp;
-//     vector<int> edge_mapping_vector_temp;
-//     // copy(vertex_set_temp.begin(), vertex_set_temp.end(), back_inserter(vertex_vector_temp));
-//     // copy(edge_set_temp.begin(), edge_set_temp.end(), back_inserter(edge_vector_temp));
-//     copy(vertex_mapping_set_temp.begin(), vertex_mapping_set_temp.end(), back_inserter(vertex_mapping_vector_temp));
-//     copy(edge_mapping_set_temp.begin(), edge_mapping_set_temp.end(), back_inserter(edge_mapping_vector_temp));
-//     g1_vertex_set = new int[vertex_set_temp.size()];
-//     g1_edge_set = new int[edge_set_temp.size()];
-//     g2_vertex_set = new int[vertex_set_temp.size()];
-//     g2_edge_set = new int[edge_set_temp.size()];
-//     for(int i = 0 ; i < vertex_vector_temp.size() ; i++){
-//         for(int j = 0 ; j < g1.vertex_set_size ; j++){
-//             if(g1.vertex_set_mapping[j] == vertex_mapping_vector_temp[i]){
-//                 g1_vertex_set[i] = g1.vertex_set[j];
-//             }
-//         }
-//         for(int j = 0 ; j < g2.vertex_set_size ; j++){
-//             if(g2.vertex_set_mapping[j] == vertex_mapping_vector_temp[i]){
-//                 g2_vertex_set[i] = g2.vertex_set[j];
-//             }
-//         }
-//     }
-//     for(int i = 0 ; i < edge_vector_temp.size() ; i++){
-//         for(int j = 0 ; j < g1.edge_set_size ; j++){
-//             if(g1.edge_set_mapping[j] == edge_mapping_vector_temp[i]){
-//                 g1_edge_set[i] = g1.edge_set[j];
-//             }
-//         }
-//         for(int j = 0 ; j < g2.edge_set_size ; j++){
-//             if(g2.edge_set_mapping[j] == edge_mapping_vector_temp[i]){
-//                 g2_edge_set[i] = g2.edge_set[j];
-//             }
-//         }
-//     }
-//     for(int i = 0 ; i < vertex_set_temp.size() ; i++){
-//         cout << "g1 mapping : " << vertex_mapping_vector_temp[i] << ", num : " << g1_vertex_set[i] << endl;
-//         // cout << "g2 mapping : " << vertex_mapping_vector_temp[i] << ", num : " << g2_vertex_set[i] << endl;
-//     }
-// }
 
 void GED :: set_graph_set(){
     set<int> vertex_set_temp;
@@ -265,10 +220,10 @@ int GED :: get_edit_cost(){
 
 void GED :: set_vertex_increase(int id1, int id2){
     for(int i = 0 ; i < vertex_mapping_size ; i++){
-        if(vertex_mapping[i] == g1.get_vertex_label(id1) && g1_vertex_set[i] != 0){
+        if(vertex_mapping[i] == g1.get_vertex_label(id1)){
             g1_vertex_set[i]++;
         }
-        if(vertex_mapping[i] == g2.get_vertex_label(id2) && g2_vertex_set[i] != 0){
+        if(vertex_mapping[i] == g2.get_vertex_label(id2)){
             g2_vertex_set[i]++;
         }
     }
@@ -287,22 +242,29 @@ void GED :: set_vertex_decrease(int id1, int id2){
 
 void GED :: set_edge_increase(int id1, int id2){
     for(int i = 0 ; i < edge_mapping_size ; i++){
-        if(edge_mapping[i] == g1.get_edge_label(id1, id2) && g1_edge_set[i] != 0){
-            g1_edge_set[i]++;
-        }
-        if(edge_mapping[i] == g2.get_edge_label(id1, id2) && g2_edge_set[i] != 0){
-            g2_edge_set[i]++;
+        for(int j = 0 ; j < id1 ; j++){
+            if(index_array[id1] == -1 || index_array[j] == -1){
+                continue;
+            }
+            if(edge_mapping[i] == g1.get_edge_label(id1, j)){
+                g1_edge_set[i]++;
+            }
+            if(edge_mapping[i] == g2.get_edge_label(index_array[id1], index_array[j])){
+                g2_edge_set[i]++;
+            }
         }
     }
 }
 
 void GED :: set_edge_decrease(int id1, int id2){
     for(int i = 0 ; i < edge_mapping_size ; i++){
-        if(edge_mapping[i] == g1.get_edge_label(id1, id2) && g1_edge_set[i] != 0){
-            g1_edge_set[i]--;
-        }
-        if(edge_mapping[i] == g2.get_edge_label(id1, id2) && g2_edge_set[i] != 0){
-            g2_edge_set[i]--;
+        for(int j = 0 ; j < id1 ; j++){
+            if(edge_mapping[i] == g1.get_edge_label(id1, j) && g1_edge_set[i] != 0){
+                g1_edge_set[i]--;
+            }
+            if(edge_mapping[i] == g2.get_edge_label(index_array[id1], index_array[j]) && g2_edge_set[i] != 0){
+                g2_edge_set[i]--;
+            }
         }
     }
 }
@@ -326,36 +288,38 @@ int GED :: get_edge_unmapped_part_cost(){
 }
 
 void GED :: calculate_GED(){
-    priority_queue<Index> q;
+    priority_queue<mapping> q;
     for(int i = 0 ; i < max_size ; i++){
         if(search_array[i]){
-            int j = index_mapping(i); // 이거 했을떄 테이블이랑
-            set_vertex_decrease(j, i); // 이거 
-            set_edge_decrease(j, i); // 이거 한 테이블 따로 index에 저장해놓으면 아래서 계산 안해도 되는거 아님?
+            int j = index_mapping(i);
+            set_vertex_decrease(j, i);
+            set_edge_decrease(j, i);
+
             int cost2 = get_vertex_unmapped_part_cost() + get_edge_unmapped_part_cost();
             int edit_cost = get_edit_cost();
-            index_unmapping(i);
+
             set_vertex_increase(j, i);
             set_edge_increase(j, i);
-            if(cost2 + edit_cost >= 5){
+            index_unmapping(i);
+            if(cost2 + edit_cost > 5){
                 continue;
             }
             Index index = Index(i, edit_cost + cost2);
-            q.push(index);
+            mapping m = copy_mapping(i, edit_cost + cost2);
+            q.push(m);
         }
     }
     while(!q.empty()){
-        Index index = q.top();
+        mapping index = q.top();
         q.pop();
         int id = index_mapping(index.index_id);
         set_vertex_decrease(id, index.index_id);
         set_edge_decrease(id, index.index_id);
-        // int cost2 = get_vertex_unmapped_part_cost() + get_edge_unmapped_part_cost();
 
         if(min_cost != -1 && min_cost <= index.cost){
-            index_unmapping(index.index_id);
             set_vertex_increase(id, index.index_id);
             set_edge_increase(id, index.index_id);
+            index_unmapping(index.index_id);
             return;
         }
 
@@ -384,6 +348,7 @@ int GED :: get_GED(){
     end = clock();
     if(min_cost == -1){
         cout << "GED over 5" << endl;
+        cout << min_cost << endl;
     }else{
         cout << "mapping" << endl;
         for(int i = 0 ; i < max_size ; i++){
@@ -395,6 +360,24 @@ int GED :: get_GED(){
     return min_cost;
 }
 
+mapping GED :: copy_mapping(int i, int cost){
+    mapping m = mapping(i, cost, max_size, vertex_mapping_size, edge_mapping_size);
+    m.set_search_array(search_array);
+    m.set_index_array(index_array);
+    m.set_max_size(max_size);
+    m.set_min_cost(min_cost);
+    m.set_g1_vertex_set(g1_vertex_set);
+    m.set_g1_edge_set(g1_edge_set);
+    m.set_g2_vertex_set(g2_vertex_set);
+    m.set_g2_edge_set(g2_edge_set);
+    m.set_vertex_mapping(vertex_mapping);
+    m.set_edge_mapping(edge_mapping);
+    m.set_vertex_mapping_size(vertex_mapping_size);
+    m.set_edge_mapping_size(edge_mapping_size);
+    m.set_GED_mapping(GED_mapping);
+    return m;
+}
+
 void GED :: test(){
     for(int i = 0 ; i < vertex_mapping_size ; i++){
         cout << g1_vertex_set[i] << " ";
@@ -404,69 +387,16 @@ void GED :: test(){
         cout << g2_vertex_set[i] << " ";
     }
     cout << endl;
+    for(int i = 0 ; i < edge_mapping_size ; i++){
+        cout << g1_edge_set[i] << " ";
+    }
+    cout << endl;
+    for(int i = 0 ; i < edge_mapping_size ; i++){
+        cout << g2_edge_set[i] << " ";
+    }
+    cout << endl ;
+    for(int i = 0 ; i < max_size ; i++){
+        cout << index_array[i] << " " << endl;
+    }
+    cout << endl<< endl;
 }
-
-// void GED :: calculate_GED(){
-//     queue<int> q;
-//     for(int i = 0 ; i < max_size ; i++){
-//         if(search_array[i]){
-//             q.push(i);
-//         }
-//     }
-//     while(!q.empty()){
-//         int temp = q.front();
-//         q.pop();
-//         int n = index_mapping(temp);
-//         // print();
-//         int cost = get_edit_cost();
-//         // cout << "cost : " << cost << endl;
-//         if(index_array[max_size-1] != -1){
-//             min_cost = cost;
-//         }
-//         // cout << "---------------------" << endl;
-//         if(min_cost != -1 && min_cost <= cost){
-//             search_array[temp] = true;
-//             index_array[n] = -1;
-//             return;
-//         }
-//         calculate_GED();
-//         search_array[temp] = true;
-//         index_array[n] = -1;
-//     }
-// }
-
-// void GED :: calculate_GED(){
-//     priority_queue<Index> q;
-//     for(int i = 0 ; i < max_size ; i++){
-//         if(search_array[i]){
-//             int a = index_mapping(i);
-//             int temp_cost = get_edit_cost();
-//             Index temp_index = Index(i, temp_cost);
-//             index_unmapping(i);
-//             q.push(temp_index);
-//         }
-//     }
-//     while(!q.empty()){
-//         Index temp = q.top();
-//         q.pop();
-//         int n = index_mapping(temp.index_id);
-//         // print();
-//         // cout << "cost : " << temp.cost << endl;
-//         if(is_full_mapping()){
-//             if(min_cost == -1){
-//                 min_cost = temp.cost;
-//             }else{
-//                 if(min_cost >= temp.cost){
-//                     min_cost = temp.cost;
-//                 }
-//             }
-//         }
-//         // cout << "---------------------" << endl;
-//         if(min_cost != -1 && min_cost <= temp.cost){
-//             index_unmapping(temp.index_id);
-//             return;
-//         }
-//         calculate_GED();
-//         index_unmapping(temp.index_id);
-//     }
-// }
