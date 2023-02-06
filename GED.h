@@ -243,23 +243,6 @@ int GED :: get_edit_cost(int * index_array){
 //     }
 // }
 
-void GED :: set_vertex_increase(int * index_array){
-    // for(int i = 0 ; i < max_size ; i++){
-    //     for(int j = 0 ; j < vertex_mapping_size ; j++){
-    //         if(vertex_mapping[j] == g1.get_vertex_label(i) && g1_vertex_set[j] != 0){
-    //             g1_vertex_set[j]++;
-    //         }
-    //         if(vertex_mapping[j] == g2.get_vertex_label(index_array[i]) && g2_vertex_set[j] != 0){
-    //             g2_vertex_set[j]++;
-    //         }
-    //     }
-    // }
-    for(int i = 0 ; i < vertex_mapping_size ; i++){
-        temp_g1_vertex_set[i] = g1_vertex_set[i];
-        temp_g2_vertex_set[i] = g2_vertex_set[i];
-    }
-}
-
 // void GED :: set_vertex_decrease(int id1, int id2){
 //     for(int i = 0 ; i < vertex_mapping_size ; i++){
 //         if(vertex_mapping[i] == g1.get_vertex_label(id1) && g1_vertex_set[i] != 0){
@@ -271,16 +254,21 @@ void GED :: set_vertex_increase(int * index_array){
 //     }
 // }
 
+void GED :: set_vertex_increase(int * index_array){
+    for(int i = 0 ; i < vertex_mapping_size ; i++){
+        temp_g1_vertex_set[i] = g1_vertex_set[i];
+        temp_g2_vertex_set[i] = g2_vertex_set[i];
+    }
+}
+
 void GED :: set_vertex_decrease(int * index_array, bool * search_array){
     for(int i = 0 ; i < max_size ; i++){
         if(!search_array[i]){
             for(int j = 0 ; j < vertex_mapping_size ; j++){
                 if(vertex_mapping[j] == g1.get_vertex_label(index_array[i]) && temp_g1_vertex_set[j] != 0){
-                    //cout << temp_g1_vertex_set[j] << endl;
                     temp_g1_vertex_set[j]--;
                 }
                 if(vertex_mapping[j] == g2.get_vertex_label(i) && temp_g2_vertex_set[j] != 0){
-                    //cout << temp_g2_vertex_set[j] << endl;
                     temp_g2_vertex_set[j]--;
                 }
             }
@@ -393,7 +381,6 @@ void GED :: calculate_GED(){
         set_vertex_decrease(index_array, search_array);
         int edit_cost = get_edit_cost(index_array);
         int hx_cost = get_vertex_unmapped_part_cost();
-        //cout << hx_cost << " + " << edit_cost << " = " << hx_cost + edit_cost << endl;
         set_vertex_increase(index_array);
         mapping m = copy_mapping(i, edit_cost + hx_cost , index_array, search_array);
         index_unmapping(i, index_array, search_array);
@@ -404,14 +391,6 @@ void GED :: calculate_GED(){
         q.push(m);
         
     }
-
-    // mapping index = q.top();
-    // for(int i = 0 ; i < max_size ; i++){
-    //     index = q.top();
-    //     cout << "index : " << index.search_array[0] << endl;
-    //     cout << "cost : " << index.cost << endl;
-    //     q.pop();
-    // }
 
     while(!q.empty()){
         mapping index = q.top();
@@ -427,7 +406,6 @@ void GED :: calculate_GED(){
 
         for(int i = 0 ; i < max_size ; i++){
             if(index.search_array[i]){
-                //cout << "------------------" << endl;
                 int j = index_mapping(i, index.index_array, index.search_array);
                 set_vertex_decrease(index.index_array, index.search_array);
                 int edit_cost = get_edit_cost(index.index_array);
@@ -439,8 +417,6 @@ void GED :: calculate_GED(){
                 if(edit_cost + hx_cost > 10){
                     continue;
                 }
-                //mapping m = copy_mapping(i, edit_cost, index.index_array, index.search_array);
-                //cout << hx_cost << " + " << edit_cost << " = " << hx_cost + edit_cost << endl;
                 q.push(m);
             }
         }
