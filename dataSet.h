@@ -106,7 +106,7 @@ void dataSet :: read_file(){
 
     vertex_bridge = new int *[v_size];
     for(int i = 0 ; i < v_size ; i++){
-        vertex_bridge[i] = new int[2];
+        vertex_bridge[i] = new int[2]; // 2 is number of possible edge label
         memset(vertex_bridge[i], 0, sizeof(int) * 2);
     }
 
