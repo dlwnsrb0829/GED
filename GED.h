@@ -4,19 +4,6 @@
 
 using namespace std;
 
-struct Index
-{
-    int index_id;
-    int cost;
-    Index(int index_id, int cost){
-        this->index_id = index_id;
-        this->cost = cost;
-    }
-    bool operator<(const Index index) const {
-        return this->cost > index.cost;
-    }
-};
-
 class GED{
 private : 
     graph g1;

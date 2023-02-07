@@ -137,71 +137,8 @@ void dataSet :: read_file(){
         }
     }
     readFile.close();
-    // for(int i = 0 ; i < v_size ; i++){
-    //     for(int j = 0 ; j < 2 ; j++){
-    //         cout << vertex_bridge[i][j] << " " ;
-    //     }
-    //     cout << endl;
-    // }
     g.set_graph_set(vertex_label_num, edge_label_num, vertex_set_size, edge_set_size, vertex_label_mapping, edge_label_mapping, vertex_bridge);
 }
-
-// void dataSet :: read_file(){
-//     ifstream readFile;
-//     string v_label = "";
-//     int graph_num = 0;
-//     multiset<int> v_set;
-//     multiset<int> e_set;
-//     readFile.open(this->fileName);
-//     if(readFile.is_open()){
-//         char arr[256];
-//         while(!readFile.eof()){
-//             readFile.getline(arr, 256);
-//             switch (arr[0]){
-//                 case 't':
-//                     split_vector = split(arr, ' ', "graph_num");
-//                     graph_num = split_vector[0];
-//                     this->v_size = 0;
-//                     this->e_size = 0;
-//                     this->is_first_edge = true;
-//                     v_label = "";
-//                     break;
-//                 case 'v':
-//                     split_vector = split(arr, ' ', "data");
-//                     v_label += to_string(split_vector[1]) + " ";
-//                     v_set.insert(split_vector[1]);
-//                     v_size++;
-//                     break;
-//                 case 'e':
-//                     if(this->is_first_edge){
-//                         this->is_first_edge = false;
-//                         split_vector = split(v_label, ' ', "");
-//                         int * v_labels = new int[v_size];
-//                         int * num_v_label = new int[v_size];
-//                         memset(num_v_label, 0, sizeof(int) * v_size);
-//                         for(int i = 0 ; i < v_size ; i++){
-//                             v_labels[i] = split_vector[i];
-//                             num_v_label[split_vector[i]]++;
-//                         }
-//                         g = graph(v_size);
-//                         g.set_v_labels(v_labels);
-//                         g.set_num_v_label(num_v_label);
-//                         g.set_graph_num(graph_num);
-//                     }
-//                     split_vector = split(arr, ' ', "data");
-//                     g.set_edge(split_vector[0], split_vector[1], split_vector[2]);
-//                     e_set.insert(split_vector[2]);
-//                     e_size++;
-//                     break;
-//                 default:
-//                     break;
-//             }
-//         }
-//         g.set_v_set(v_set);
-//         g.set_e_set(e_set);
-//     }
-//     readFile.close();
-// }
 
 graph dataSet :: get_graph(){
     return this->g;
