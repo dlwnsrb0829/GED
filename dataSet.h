@@ -24,6 +24,7 @@ private:
     int vertex_set_size;
     int edge_set_size;
     bool is_first_edge;
+    int ** vertex_bridge;
     string fileName;
     graph g;
     vector<int> split_vector;
@@ -103,6 +104,12 @@ void dataSet :: read_file(){
         edge_label_mapping[i] = v2[i];
     }
 
+    vertex_bridge = new int *[v_size];
+    for(int i = 0 ; i < v_size ; i++){
+        vertex_bridge[i] = new int[2];
+        memset(vertex_bridge[i], 0, sizeof(int) * 2);
+    }
+
     readFile.open(this->fileName);
     if(readFile.is_open()){
         char arr[256];
@@ -119,6 +126,8 @@ void dataSet :: read_file(){
         for(int i = 0 ; i < e_size ; i++){
             readFile.getline(arr, 256);
             split_vector = split(arr, ' ', "data");
+            vertex_bridge[split_vector[0]][split_vector[2]-1]++;
+            vertex_bridge[split_vector[1]][split_vector[2]-1]++;
             g.set_edge(split_vector[0], split_vector[1], split_vector[2]);
             for(int i = 0 ; i < edge_vector.size() ; i++){
                 if(edge_label_mapping[i] == split_vector[2]){
@@ -128,7 +137,13 @@ void dataSet :: read_file(){
         }
     }
     readFile.close();
-    g.set_graph_set(vertex_label_num, edge_label_num, vertex_set_size, edge_set_size, vertex_label_mapping, edge_label_mapping);
+    // for(int i = 0 ; i < v_size ; i++){
+    //     for(int j = 0 ; j < 2 ; j++){
+    //         cout << vertex_bridge[i][j] << " " ;
+    //     }
+    //     cout << endl;
+    // }
+    g.set_graph_set(vertex_label_num, edge_label_num, vertex_set_size, edge_set_size, vertex_label_mapping, edge_label_mapping, vertex_bridge);
 }
 
 // void dataSet :: read_file(){
