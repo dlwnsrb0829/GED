@@ -13,6 +13,7 @@ private:
     int * v_labels;
     int * num_v_label;
     int v_size;
+    int e_size;
     int graph_num;
     int start, end;
     multiset<int> v_set;
@@ -26,8 +27,9 @@ public:
     int * edge_set_mapping;
     int ** vertex_bridge;
     graph(){}
-    graph(int v_size){
+    graph(int v_size, int e_size){
         this->v_size = v_size;
+        this->e_size = e_size;
         adj_matrix = new int *[v_size];
         for(int i = 0 ; i < v_size ; i++){
             adj_matrix[i] = new int[v_size];
@@ -44,6 +46,7 @@ public:
     void DFS_use_recursion();
     void DFS_use_stack();
     int get_v_size();
+    int get_e_size();
     int get_vertex_label(int vertex);
     int get_edge_label(int vertex1, int vertex2);
     void test();
@@ -95,6 +98,10 @@ void graph :: set_graph_set(int * vertex_set, int * edge_set, int vertex_set_siz
 // get graph
 int graph :: get_v_size(){
     return v_size;
+}
+
+int graph :: get_e_size(){
+    return e_size;
 }
 
 multiset<int> graph :: get_v_set(){

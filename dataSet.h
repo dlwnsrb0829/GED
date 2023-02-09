@@ -76,7 +76,7 @@ void dataSet :: read_file(){
     }
     readFile.close();
     
-    g = graph(v_size);
+    g = graph(v_size, e_size);
     g.set_graph_num(graph_num);
     split_vector = split(v_label, ' ', "");
     vertex_mapping = new int[v_size];
