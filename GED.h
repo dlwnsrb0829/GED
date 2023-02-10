@@ -419,7 +419,7 @@ void GED :: set_bridge_increase_child(int g1_index, int * index_array){
 
 void GED :: set_bridge_decrease_child(int g1_index, int * index_array){
     int g1_index1 = ordering[g1_index];
-    for(int j1 = 0 ; j1 < g1_index ; j1++){
+    for(int j1 = g1_index-1 ; j1 >= 0 ; j1--){
         int j = ordering[j1];
         if(g1.get_edge_label(g1_index1, j) != 0){
             temp_g1_vertex_bridge[g1_index1][g1.get_edge_label(g1_index1, j)-1]--;
@@ -564,17 +564,21 @@ void GED :: calculate_GED(){
             copy(&index.index_array[0], &index.index_array[max_size], &GED_mapping[0]);
             break;
         }
-        set_vertex_decrease(index.index_array);
-        set_edge_decrease(index.index_array);
-        set_bridge_decrease(index.index_array);
+        // set_vertex_decrease(index.index_array);
+        // set_edge_decrease(index.index_array);
+        // set_bridge_decrease(index.index_array);
         q.pop();
         for(int i = 0 ; i < max_size ; i++){
             if(index.search_array[i]){
                 int g1_index = index_mapping(i, index.index_array, index.search_array);
                 // cout << g1_index << endl;
-                set_vertex_decrease_child(g1_index, i);
-                set_edge_decrease_child(g1_index, index.index_array);
-                set_bridge_decrease_child(g1_index, index.index_array);
+                // set_vertex_decrease_child(g1_index, i);
+                // set_edge_decrease_child(g1_index, index.index_array);
+                // set_bridge_decrease_child(g1_index, index.index_array);
+
+                set_vertex_decrease(index.index_array);
+                set_edge_decrease(index.index_array);
+                set_bridge_decrease(index.index_array);
 
                 int edit_cost = get_edit_cost(index.index_array);
                 int vertex_hx_cost = get_vertex_unmapped_part_cost();
@@ -589,13 +593,17 @@ void GED :: calculate_GED(){
                 // }
                 // break;
 
-                set_bridge_increase_child(g1_index, index.index_array);
-                set_edge_increase_child(g1_index, index.index_array);
-                set_vertex_increase_child(g1_index, i);
+                // set_bridge_increase_child(g1_index, index.index_array);
+                // set_edge_increase_child(g1_index, index.index_array);
+                // set_vertex_increase_child(g1_index, i);
+
+                set_bridge_increase();
+                set_edge_increase();
+                set_vertex_increase();
                 // test();
                 mapping m = copy_mapping(i, edit_cost + hx_cost, index.index_array, index.search_array, vertex_hx_cost, edge_hx_cost);
                 index_unmapping(i, index.index_array, index.search_array);
-                // cout << edit_cost << " " << hx_cost << " " << vertex_hx_cost << " " << edge_hx_cost << " " << bridge_cost << endl;
+                cout << edit_cost << " " << hx_cost << " " << vertex_hx_cost << " " << edge_hx_cost << " " << bridge_cost << endl;
                 if(edit_cost + hx_cost > 15){
                     continue;
                 }
@@ -604,9 +612,9 @@ void GED :: calculate_GED(){
             }
         }
 
-        set_bridge_increase();
-        set_edge_increase();
-        set_vertex_increase();
+        // set_bridge_increase();
+        // set_edge_increase();
+        // set_vertex_increase();
 
     }
 }
