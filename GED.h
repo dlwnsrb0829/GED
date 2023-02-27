@@ -579,8 +579,7 @@ void GED :: calculate_GED(){
 
     while(!q.empty()){
         mapping index = q.top();
-
-        if(index.index_array[max_size-1] != -1){
+        if(is_full_mapping(index.index_array)){
             min_cost = index.cost;
             copy(&index.index_array[0], &index.index_array[max_size], &GED_mapping[0]);
             break;

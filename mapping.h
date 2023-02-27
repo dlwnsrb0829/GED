@@ -35,7 +35,6 @@ public :
             return this->depth < mapping.depth;
         }
         return this->cost > mapping.cost;
-        // return this->cost > mapping.cost;
     }
 };
 
