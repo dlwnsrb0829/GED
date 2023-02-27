@@ -12,10 +12,12 @@ public :
     int edge_hx;
     int index_id;
     int max_size;
-    mapping(int i, int cost, int max_size, int vertex_hx, int edge_hx){
+    int depth;
+    mapping(int i, int cost, int max_size, int vertex_hx, int edge_hx, int depth){
         this->index_id = i;
         this->cost = cost;
         this->max_size = max_size;
+        this->depth = depth;
 
         this->vertex_hx = vertex_hx;
         this->edge_hx = edge_hx;
@@ -29,7 +31,11 @@ public :
     void set_index_array(int *index_array);
 
     bool operator<(const mapping mapping) const {
+        if(this->cost == mapping.cost){
+            return this->depth < mapping.depth;
+        }
         return this->cost > mapping.cost;
+        // return this->cost > mapping.cost;
     }
 };
 
