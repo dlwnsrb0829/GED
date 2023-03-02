@@ -603,12 +603,16 @@ void GED :: calculate_GED(){
         int depth = 1;
         set_vertex_decrease(index_array);
         set_edge_decrease(index_array);
+        set_bridge_decrease(index_array);
 
         int edit_cost = get_edit_cost(index_array);
         int vertex_hx_cost = get_vertex_unmapped_part_cost();
         int edge_hx_cost = get_edge_unmapped_part_cost();
-        int hx_cost = vertex_hx_cost + edge_hx_cost;
+        int bridge_hx_cost = get_bridge_cost(index_array);
 
+        int hx_cost = vertex_hx_cost + edge_hx_cost + bridge_hx_cost;
+
+        set_bridge_increase();
         set_vertex_increase();
         set_edge_increase();
 
