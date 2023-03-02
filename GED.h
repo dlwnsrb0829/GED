@@ -1,6 +1,7 @@
 #include<iostream>
 #include<ctime>
 #include<chrono>
+#include<algorithm>
 #include"mapping.h"
 
 using namespace std;
@@ -507,39 +508,66 @@ double GED :: get_edge_weight(int v1, int v2){
 
 void GED :: reorder(){
     int v = 0;
+
+    int * temp_vertex_set = new int[g1.vertex_set_size];
+    for(int i = 0 ; i < g1.vertex_set_size ; i++){
+        temp_vertex_set[i] = g1.vertex_set[i];
+    }
+    sort(temp_vertex_set, temp_vertex_set + g1.vertex_set_size);
+    cout << endl;
+    int min = 0;
+    for(int i = 0 ; i < g1.vertex_set_size ; i++){
+        if(min + temp_vertex_set[i] >= temp_vertex_set[g1.vertex_set_size-1]) break;
+        min += temp_vertex_set[i];
+    }
+    // cout << min << endl;
+    // double vw = (double)g1.get_v_size() / ((double)g1_vertex_set[1] + (double)g1_vertex_set[2]);
+    int edge_set_min = g1_edge_set[0] > g1_edge_set[1] ? g1_edge_set[1] : g1_edge_set[0];\
+
+    // min = 1;
+    // edge_set_min = 1;
+
+    double vw = (double)g1.get_v_size() / (double)min;
+    double ew = (double)g1.get_e_size() / (double)edge_set_min;
+    cout << vw << endl;
+    cout << ew << endl;
     double max = 0.0;
     for(int i = 0 ; i < g1.get_v_size() ; i++){
-        double weight = get_vertex_weight(i);
+        double weight = get_vertex_weight(i) * vw;
+        // cout << i << " " << weight << endl;
         for(int j = 0 ; j < g1.get_v_size() ; j++){
-            weight += get_edge_weight(i, j);
+            weight += get_edge_weight(i, j) * ew;
         }
+        // cout << i << " " << weight << endl;
         if(weight > max){
             max = weight;
             v = i;
         }
     }
     swap(0, v);
-
+    // cout << "----------------" << endl;
     for(int next = 1 ; next < g1.get_v_size() ; next++){
         max = 0.0;
         for(int i = next ; i < g1.get_v_size() ; i++){
             double weight = 0.0;
             for(int j = 0 ; j < g1.get_v_size() ; j++){
-                weight += get_edge_weight(i, j);
+                weight += get_edge_weight(i, j) * ew;
             }
             if(weight != 0.0){
-                weight += get_vertex_weight(i);
+                weight += get_vertex_weight(i) * vw;
             }
             if(weight > max){
                 max = weight;
                 v = i;
             }
+            // cout << i << " " << weight << endl;
         }
+        // cout <<  "----------------" << endl;
         if(max == 0.0){
             for(int i = next ; i < g1.get_v_size() ; i++){
-                double weight = get_vertex_weight(i);
+                double weight = get_vertex_weight(i)*vw;
                 for(int j = next ; j < g1.get_v_size() ; j++){
-                    weight += get_edge_weight(i, j);
+                    weight += get_edge_weight(i, j) * ew;
                 }
                 if(weight > max){
                     max = weight;
