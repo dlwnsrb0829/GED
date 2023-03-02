@@ -647,7 +647,7 @@ void GED :: calculate_GED(){
                 int vertex_hx_cost = get_vertex_unmapped_part_cost();
                 int edge_hx_cost = get_edge_unmapped_part_cost();
                 int bridge_cost = get_bridge_cost(index.index_array);
-                int hx_cost = vertex_hx_cost + edge_hx_cost + 0;
+                int hx_cost = vertex_hx_cost + edge_hx_cost + bridge_cost;
 
                 set_bridge_increase_child(g1_index, index.index_array);
                 set_edge_increase_child(g1_index, index.index_array);
