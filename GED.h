@@ -475,11 +475,28 @@ int GED :: get_bridge_cost(int * index_array){
     for(int i1 = 0 ; i1 < max_size ; i1++){
         int i = ordering[i1];
         if(index_array[i] != -1){
-            int temp1 = temp_g1_vertex_bridge[i][0] > temp_g2_vertex_bridge[index_array[i]][0] ? temp_g1_vertex_bridge[i][0] - temp_g2_vertex_bridge[index_array[i]][0] : temp_g2_vertex_bridge[index_array[i]][0] - temp_g1_vertex_bridge[i][0];
-            int temp2 = temp_g1_vertex_bridge[i][1] > temp_g2_vertex_bridge[index_array[i]][1] ? temp_g1_vertex_bridge[i][1] - temp_g2_vertex_bridge[index_array[i]][1] : temp_g2_vertex_bridge[index_array[i]][1] - temp_g1_vertex_bridge[i][1];
-            cost = cost + temp1 + temp2;
+            // int temp1 = temp_g1_vertex_bridge[i][0] > temp_g2_vertex_bridge[index_array[i]][0] ? 
+            // temp_g1_vertex_bridge[i][0] - temp_g2_vertex_bridge[index_array[i]][0] : 
+            // temp_g2_vertex_bridge[index_array[i]][0] - temp_g1_vertex_bridge[i][0];
+
+            // int temp2 = temp_g1_vertex_bridge[i][1] > temp_g2_vertex_bridge[index_array[i]][1] ? 
+            // temp_g1_vertex_bridge[i][1] - temp_g2_vertex_bridge[index_array[i]][1] : 
+            // temp_g2_vertex_bridge[index_array[i]][1] - temp_g1_vertex_bridge[i][1];
+            
+            // cost = cost + temp1 + temp2;
+
+            int g1_sum = temp_g1_vertex_bridge[i][0] + temp_g1_vertex_bridge[i][1];
+            int g2_sum = temp_g2_vertex_bridge[index_array[i]][0] + temp_g2_vertex_bridge[index_array[i]][1];
+            int temp1 = temp_g1_vertex_bridge[i][0] > temp_g2_vertex_bridge[index_array[i]][0] ? temp_g2_vertex_bridge[index_array[i]][0] : temp_g1_vertex_bridge[i][0];
+            int temp2 = temp_g1_vertex_bridge[i][1] > temp_g2_vertex_bridge[index_array[i]][1] ? temp_g2_vertex_bridge[index_array[i]][1] : temp_g1_vertex_bridge[i][1];
+            g1_sum = g1_sum - temp1 - temp2;
+            g2_sum = g2_sum - temp1 - temp2;
+            int temp_cost = g1_sum > g2_sum ? g1_sum : g2_sum;
+            cost += temp_cost;
+
         }
     }
+    // cout << cost << endl;
     return cost;
 }
 
@@ -630,7 +647,7 @@ void GED :: calculate_GED(){
                 int vertex_hx_cost = get_vertex_unmapped_part_cost();
                 int edge_hx_cost = get_edge_unmapped_part_cost();
                 int bridge_cost = get_bridge_cost(index.index_array);
-                int hx_cost = vertex_hx_cost + edge_hx_cost + bridge_cost;
+                int hx_cost = vertex_hx_cost + edge_hx_cost + 0;
 
                 set_bridge_increase_child(g1_index, index.index_array);
                 set_edge_increase_child(g1_index, index.index_array);
