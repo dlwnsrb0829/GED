@@ -408,6 +408,7 @@ void GED :: set_bridge_increase_child(int g1_index, int * index_array){
     int g1_index1 = ordering[g1_index];
     for(int j1 = g1_index-1 ; j1 >= 0 ; j1--){
         int j = ordering[j1];
+        // int j = j1;
         if(g1.get_edge_label(g1_index1, j) != 0){
             temp_g1_vertex_bridge[g1_index1][g1.get_edge_label(g1_index1, j)-1]++;
             temp_g1_vertex_bridge[j][g1.get_edge_label(g1_index1, j)-1]++;
@@ -423,6 +424,7 @@ void GED :: set_bridge_decrease_child(int g1_index, int * index_array){
     int g1_index1 = ordering[g1_index];
     for(int j1 = g1_index-1 ; j1 >= 0 ; j1--){
         int j = ordering[j1];
+        // int j = j1;
         if(g1.get_edge_label(g1_index1, j) != 0){
             temp_g1_vertex_bridge[g1_index1][g1.get_edge_label(g1_index1, j)-1]--;
             temp_g1_vertex_bridge[j][g1.get_edge_label(g1_index1, j)-1]--;
@@ -619,7 +621,7 @@ void GED :: calculate_GED(){
         mapping m = copy_mapping(i, edit_cost + hx_cost , index_array, search_array, vertex_hx_cost, edge_hx_cost, depth);
         index_unmapping(i, index_array, search_array);
 
-        if(edit_cost + hx_cost > 5){
+        if(edit_cost + hx_cost > 12){
             continue;
         }
         
@@ -659,7 +661,7 @@ void GED :: calculate_GED(){
 
                 mapping m = copy_mapping(i, edit_cost + hx_cost, index.index_array, index.search_array, vertex_hx_cost, edge_hx_cost, depth);
                 index_unmapping(i, index.index_array, index.search_array);
-                if(edit_cost + hx_cost > 5){
+                if(edit_cost + hx_cost > 12){
                     continue;
                 }
                 
@@ -676,6 +678,26 @@ void GED :: calculate_GED(){
 
 int GED :: get_GED(){
     reorder();
+    // ordering[0] = 8;
+    // ordering[1] = 7;
+    // ordering[2] = 6;
+    // ordering[3] = 5;
+    // ordering[4] = 19;
+    // ordering[5] = 9;
+    // ordering[6] = 4;
+    // ordering[7] = 3;
+    // ordering[8] = 0;
+    // ordering[9] = 2;
+    // ordering[10] = 1;
+    // ordering[11] = 13;
+    // ordering[12] = 12;
+    // ordering[13] = 14;
+    // ordering[14] = 15;
+    // ordering[15] = 17;
+    // ordering[16] = 10;
+    // ordering[17] = 11;
+    // ordering[18] = 16;
+    // ordering[19] = 18;
     
     for(int i = 0 ; i < max_size ; i++){
         cout << ordering[i] << " ";
