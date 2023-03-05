@@ -533,7 +533,7 @@ void GED :: reorder(){
         temp_vertex_set[i] = g1.vertex_set[i];
     }
     sort(temp_vertex_set, temp_vertex_set + g1.vertex_set_size);
-    cout << endl;
+    // cout << endl;
     int min = 0;
     for(int i = 0 ; i < g1.vertex_set_size ; i++){
         if(min + temp_vertex_set[i] >= temp_vertex_set[g1.vertex_set_size-1]) break;
@@ -548,13 +548,16 @@ void GED :: reorder(){
 
     double vw = (double)g1.get_v_size() / (double)min;
     double ew = (double)g1.get_e_size() / (double)edge_set_min;
-    cout << vw << endl;
-    cout << ew << endl;
+    // cout << vw << endl;
+    // cout << ew << endl;
+    // vw = 1;
+    // ew = 1;
     double max = 0.0;
     for(int i = 0 ; i < g1.get_v_size() ; i++){
         double weight = get_vertex_weight(i) * vw;
         // cout << i << " " << weight << endl;
-        for(int j = 0 ; j < g1.get_v_size() ; j++){
+        // for(int j = 0 ; j < g1.get_v_size() ; j++){
+        for(int j = i-1 ; j >= 0 ; j--){
             weight += get_edge_weight(i, j) * ew;
         }
         // cout << i << " " << weight << endl;
@@ -562,14 +565,19 @@ void GED :: reorder(){
             max = weight;
             v = i;
         }
+        // cout << i <<  " " << weight << endl;
     }
     swap(0, v);
+    // for(int i = 0 ; i < g1.get_v_size() ; i++){
+    //     cout << ordering[i] << endl;
+    // }
+
     // cout << "----------------" << endl;
     for(int next = 1 ; next < g1.get_v_size() ; next++){
         max = 0.0;
         for(int i = next ; i < g1.get_v_size() ; i++){
             double weight = 0.0;
-            for(int j = 0 ; j < g1.get_v_size() ; j++){
+            for(int j = 0 ; j < next ; j++){
                 weight += get_edge_weight(i, j) * ew;
             }
             if(weight != 0.0){
@@ -678,26 +686,28 @@ void GED :: calculate_GED(){
 
 int GED :: get_GED(){
     reorder();
+
+    // 8, 7, 6, 5, 9, 3, 4, 2, 0, 1, 10, 11, 16, 12, 13, 15, 14, 17, 18, 19
     // ordering[0] = 8;
     // ordering[1] = 7;
     // ordering[2] = 6;
     // ordering[3] = 5;
-    // ordering[4] = 19;
-    // ordering[5] = 9;
+    // ordering[4] = 9;
+    // ordering[5] = 3;
     // ordering[6] = 4;
-    // ordering[7] = 3;
+    // ordering[7] = 2;
     // ordering[8] = 0;
-    // ordering[9] = 2;
-    // ordering[10] = 1;
-    // ordering[11] = 13;
-    // ordering[12] = 12;
-    // ordering[13] = 14;
-    // ordering[14] = 15;
-    // ordering[15] = 17;
-    // ordering[16] = 10;
-    // ordering[17] = 11;
-    // ordering[18] = 16;
-    // ordering[19] = 18;
+    // ordering[9] = 1;
+    // ordering[10] = 10;
+    // ordering[11] = 11;
+    // ordering[12] = 16;
+    // ordering[13] = 12;
+    // ordering[14] = 13;
+    // ordering[15] = 15;
+    // ordering[16] = 14;
+    // ordering[17] = 17;
+    // ordering[18] = 18;
+    // ordering[19] = 19;
     
     for(int i = 0 ; i < max_size ; i++){
         cout << ordering[i] << " ";
